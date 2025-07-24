@@ -23,17 +23,31 @@ export const Form = () => {
         isError: false,
         isEmpty: false
     })
+    const [type, setType] = useState({
+        value: null,
+        isEmpty: false
+    })
 
     const amountRef = useRef()
     const termRef = useRef()
     const interestRef = useRef()
 
-    const handleTypo = (value, setError) => {
+    const handleTypo = (value, setFunction) => {
+        const trimmed = value.trim()
         const regex = /[^0-9,]+/g
-        const isTypo = regex.test(value) // true or false
-        setError(prev => ({
+        const isTypo = regex.test(trimmed) // true or false
+        setFunction(prev => ({
             ...prev,
-            isError: isTypo
+            value: trimmed,
+            isError: isTypo,
+        }))
+    }
+
+    const handleRadioSelect = (value) => {
+        console.log(value)
+        setType(prev => ({
+            ...prev,
+            value: value
         }))
     }
 
@@ -48,6 +62,7 @@ export const Form = () => {
         setEmpty(setAmount)
         setEmpty(setTerm)
         setEmpty(setInterest)
+        setEmpty(setType)
     }
 
     const onCalculate = (e) => {
@@ -55,22 +70,23 @@ export const Form = () => {
         handleEmpty()
     }
 
-    useEffect(() => {
-        console.log("Amount", amount)
-        console.log("Term", term)
-        console.log("Interest", interest)
-    }, [amount, term, interest])
+    // useEffect(() => {
+    //     console.log("Amount", amount)
+    //     console.log("Term", term)
+    //     console.log("Interest", interest)
+    //     console.log("Type", type)
+    // }, [amount, term, interest, type])
 
     return <div className="form-container">
         <div className='form'>
-            <div className="form__header group-row-on-large">
+            <div className="form__header group-row">
                 <h1 className='form-title'>Mortgage Calculator</h1>
                 <p className='clear-form'>Clear All</p>
             </div>
             <form className="form__body" action="" onSubmit={onCalculate}>
                 <Input
                     id="mortgage-amount"
-                    value={amount.value}
+                    input={amount}
                     ref={amountRef}
                     label="Mortgage Amount"
                     type="text"
@@ -80,10 +96,10 @@ export const Form = () => {
                     handleTypo={handleTypo}
                     setValue={setAmount}
                 />
-                <div className="group-row-on-large">
+                <div className="group-row">
                     <Input
                         id="mortgage-term"
-                        value={term.value}
+                        input={term}
                         ref={termRef}
                         label="Mortgage Term"
                         type="text"
@@ -95,7 +111,7 @@ export const Form = () => {
                     />
                     <Input
                         id="interest-rate"
-                        value={interest.value}
+                        input={interest}
                         ref={interestRef}
                         label="Interest Rate"
                         type="text"
@@ -112,16 +128,23 @@ export const Form = () => {
                         <RadioInput
                             id="repayment"
                             label="Repayment"
+                            value="Repayment"
                             name="mortgage-type"
                             type="radio"
+                            handleRadioSelect={handleRadioSelect}
                         />
                         <RadioInput
                             id="interest-only"
                             label="Interest Only"
+                            value="Interest Only"
                             name="mortgage-type"
                             type="radio"
+                            handleRadioSelect={handleRadioSelect}
                         />
                     </div>
+                    <p className={`error-message ${type.isEmpty ? "empty" : null}`}>
+                        {type.isEmpty && "This field is required"}
+                    </p>
                 </fieldset>
                 <Button
                     type="submit"

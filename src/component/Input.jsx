@@ -3,7 +3,7 @@ export const Input = ({ id,
     label,
     className,
     type,
-    value,
+    input,
     placeholder,
     symbol,
     position,
@@ -11,10 +11,17 @@ export const Input = ({ id,
     setValue
 }) => {
 
+    const { value, isError, isEmpty } = input
+
     return <>
         <div className="form-group">
             <label htmlFor={id}>{label}</label>
-            <div className='input-wrapper'>
+            <div className={`input-wrapper 
+            ${isError
+                    ? 'error'
+                    : isEmpty
+                        ? 'empty'
+                        : null}`}>
                 <input
                     id={id}
                     ref={ref}
@@ -23,15 +30,25 @@ export const Input = ({ id,
                     value={value}
                     onChange={(e) => {
                         handleTypo(e.target.value, setValue)
-                        setValue(prev => ({
-                            ...prev,
-                            value: e.target.value.trim()
-                        }))
                     }}
                     placeholder={placeholder}
                 />
                 <p className={`symbol ${position}`}>{symbol}</p>
             </div>
+            <p className={`error-message ${isError
+                ? 'error'
+                : isEmpty
+                    ? 'empty'
+                    : null
+                }`}>
+                {/* {isEmpty && "This field is required" || isError && "Typo input"} */}
+                {isError
+                    ? "Typo input"
+                    : isEmpty
+                        ? "This field is required"
+                        : null
+                }
+            </p>
         </div>
     </>
 }

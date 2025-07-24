@@ -10,6 +10,7 @@
   --LimeTransparent: hsla(61, 70%, 52%, 0.15);
   --LimeTransparent-500: hsla(61, 70%, 52%, 0.5);
   --Red: hsl(4, 69%, 50%);
+  --Purple: hsl(279, 69%, 50%);
 
   /* Neutral */
   --White: hsl(0, 0%, 100%);
