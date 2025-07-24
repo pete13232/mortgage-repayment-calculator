@@ -1,0 +1,98 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* Primary */
+  --Lime: hsl(61, 70%, 52%);
+  --LimeTransparent: hsla(61, 70%, 52%, 0.15);
+  --LimeTransparent-500: hsla(61, 70%, 52%, 0.5);
+  --Red: hsl(4, 69%, 50%);
+
+  /* Neutral */
+  --White: hsl(0, 0%, 100%);
+  --Slate-100: hsl(202, 86%, 94%);
+  --Slate-300: hsl(203, 41%, 72%);
+  --Slate-500: hsl(200, 26%, 54%);
+  --Slate-700: hsl(200, 24%, 40%);
+  --Slate-900: hsl(202, 55%, 16%);
+  --BlackTransparent: hsla(0, 0%, 0%, 0.25);
+}
+
+body {
+  font-size: 16px;
+  font-weight: 500;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+h1 {
+  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--Slate-900);
+}
+
+h2 {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+
+input {
+  cursor: pointer;
+  outline: none;
+
+  border: none;
+  background-color: transparent;
+  color: var(--Slate-900);
+  font-weight: 700;
+}
+
+input::placeholder {
+  font-weight: 500;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* input[type="radio"] {
+  accent-color: var(--Lime);
+} */
+
+
+input[type="radio"] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 1rem;
+  height: 1rem;
+  border: 1px solid var(--Slate-700);
+  border-radius: 50%;
+  outline: none;
+  position: relative;
+}
+
+input[type="radio"]:checked {
+  border-color: var(--Lime);
+}
+
+input[type="radio"]::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background-color: transparent;
+}
+
+input[type="radio"]:checked::before {
+  background-color: var(--Lime);
+}
