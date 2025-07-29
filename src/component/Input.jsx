@@ -1,7 +1,5 @@
 export const Input = ({ id,
-    ref,
     label,
-    className,
     type,
     input,
     placeholder,
@@ -16,7 +14,7 @@ export const Input = ({ id,
     return <>
         <div className="form-group">
             <label htmlFor={id}>{label}</label>
-            <div className={`input-wrapper 
+            <div className={`input-wrapper
             ${isError
                     ? 'error'
                     : isEmpty
@@ -24,10 +22,9 @@ export const Input = ({ id,
                         : null}`}>
                 <input
                     id={id}
-                    ref={ref}
                     className={`input ${position}`}
                     type={type}
-                    value={value}
+                    value={value ?? ""}
                     onChange={(e) => {
                         handleTypo(e.target.value, setValue)
                     }}

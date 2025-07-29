@@ -1,10 +1,11 @@
 import { Button } from './Button'
 import { Input } from './Input'
+import { RadioForm } from './RadioForm'
 import { RadioInput } from './RadioInput'
 import { Result } from './Result'
 import { CalculatorIcon } from './CalculatorIcon'
 
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 
 export const Form = () => {
 
@@ -25,29 +26,36 @@ export const Form = () => {
     })
     const [type, setType] = useState({
         value: null,
-        isEmpty: false
+        isEmpty: false,
     })
 
-    const amountRef = useRef()
-    const termRef = useRef()
-    const interestRef = useRef()
+    const [hasSubmit, setHasSubmit] = useState(false)
+
+    const [monthlyPayment, setMonthlyPayment] = useState(0)
+    const [totalPayment, setTotalPayment] = useState(0)
+
 
     const handleTypo = (value, setFunction) => {
         const trimmed = value.trim()
-        const regex = /[^0-9,]+/g
+        const regex = /[^0-9,.]+/g
         const isTypo = regex.test(trimmed) // true or false
+        console.log(isTypo)
         setFunction(prev => ({
             ...prev,
             value: trimmed,
             isError: isTypo,
         }))
+
+        if (hasSubmit) {
+            handleEmpty()
+        }
     }
 
     const handleRadioSelect = (value) => {
-        console.log(value)
         setType(prev => ({
             ...prev,
-            value: value
+            value: value,
+            isEmpty: !value,
         }))
     }
 
@@ -65,29 +73,84 @@ export const Form = () => {
         setEmpty(setType)
     }
 
+    const convertToNumber = (input, setFunction) => {
+        const { value, isEmpty } = input
+
+        if (isEmpty || value === null) return null
+
+        if (typeof value === "string") return parseFloat(value.replaceAll(",", ''))
+
+        return parseFloat(value)
+    }
+
+
+    const onReset = () => {
+        setAmount({
+            value: null,
+            isError: false,
+            isEmpty: false
+        })
+        setTerm({
+            value: null,
+            isError: false,
+            isEmpty: false
+        })
+        setInterest({
+            value: null,
+            isError: false,
+            isEmpty: false
+        })
+        setType({
+            value: null,
+            isEmpty: false,
+        })
+
+        setHasSubmit(false)
+        setMonthlyPayment(0)
+        setTotalPayment(0)
+    }
+
     const onCalculate = (e) => {
         e.preventDefault()
         handleEmpty()
+
+        const amountNum = convertToNumber(amount, setAmount)
+        const termNum = convertToNumber(term, setTerm)
+        const interestNum = convertToNumber(interest, setInterest)
+
+        const P = amountNum
+        const n = termNum * 12
+        const r = interestNum / 12 / 100
+        let monthly, total
+
+        console.log(type)
+        if (type.value === "Repayment") {
+            monthly = (P * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1)
+            total = monthly * n
+        }
+        if (type.value === "Interest Only") {
+            monthly = P * r;
+            total = monthly * n + P;
+        }
+        setMonthlyPayment(Number(monthly))
+        setTotalPayment(Number(total))
+
     }
 
-    // useEffect(() => {
-    //     console.log("Amount", amount)
-    //     console.log("Term", term)
-    //     console.log("Interest", interest)
-    //     console.log("Type", type)
-    // }, [amount, term, interest, type])
 
     return <div className="form-container">
         <div className='form'>
             <div className="form__header group-row">
                 <h1 className='form-title'>Mortgage Calculator</h1>
-                <p className='clear-form'>Clear All</p>
+                <p className='clear-form' onClick={onReset}>Clear All</p>
             </div>
-            <form className="form__body" action="" onSubmit={onCalculate}>
+            <form className="form__body" action="" onSubmit={(e) => {
+                onCalculate(e)
+                setHasSubmit(true)
+            }}>
                 <Input
                     id="mortgage-amount"
                     input={amount}
-                    ref={amountRef}
                     label="Mortgage Amount"
                     type="text"
                     placeholder="200,000"
@@ -100,7 +163,6 @@ export const Form = () => {
                     <Input
                         id="mortgage-term"
                         input={term}
-                        ref={termRef}
                         label="Mortgage Term"
                         type="text"
                         placeholder="10"
@@ -112,7 +174,6 @@ export const Form = () => {
                     <Input
                         id="interest-rate"
                         input={interest}
-                        ref={interestRef}
                         label="Interest Rate"
                         type="text"
                         placeholder="5"
@@ -122,40 +183,23 @@ export const Form = () => {
                         setValue={setInterest}
                     />
                 </div>
-                <fieldset className='radio-fieldset'>
-                    <legend>Mortgage Type</legend>
-                    <div className='radio-wrapper'>
-                        <RadioInput
-                            id="repayment"
-                            label="Repayment"
-                            value="Repayment"
-                            name="mortgage-type"
-                            type="radio"
-                            handleRadioSelect={handleRadioSelect}
-                        />
-                        <RadioInput
-                            id="interest-only"
-                            label="Interest Only"
-                            value="Interest Only"
-                            name="mortgage-type"
-                            type="radio"
-                            handleRadioSelect={handleRadioSelect}
-                        />
-                    </div>
-                    <p className={`error-message ${type.isEmpty ? "empty" : null}`}>
-                        {type.isEmpty && "This field is required"}
-                    </p>
-                </fieldset>
+                <RadioForm
+                    type={type}
+                    handleRadioSelect={handleRadioSelect}
+                />
+
                 <Button
                     type="submit"
-                // onCalculate={onCalculate}
                 >
                     <CalculatorIcon />
                     Calculate Repayments
                 </Button>
             </form>
         </div>
-        <Result />
+        <Result
+            monthlyPayment={monthlyPayment}
+            totalPayment={totalPayment}
+        />
     </div>
 
 }

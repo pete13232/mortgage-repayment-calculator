@@ -1,6 +1,6 @@
 import { EmptyIcon } from "./EmptyIcon"
 
-export const Result = () => {
+export const Result = ({ monthlyPayment, totalPayment }) => {
     return (
         // <div className="result-container">
         //     <EmptyIcon />
@@ -20,11 +20,17 @@ export const Result = () => {
             <div className="result-body has-result">
                 <div className="result-body__top">
                     <h3>Your monthly repayments</h3>
-                    <p>£1,200.50</p>
+                    <p>{monthlyPayment.toLocaleString('en-GB', {
+                        style: 'currency',
+                        currency: 'GBP'
+                    })}</p>
                 </div>
                 <div className="result-body__bottom">
                     <h3>Total you'll repay over the term</h3>
-                    <p>£400,000.50</p>
+                    <p>{totalPayment.toLocaleString('en-GB', {
+                        style: 'currency',
+                        currency: 'GBP'
+                    })}</p>
                 </div>
             </div>
         </div>
