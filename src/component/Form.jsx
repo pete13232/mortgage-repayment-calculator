@@ -225,8 +225,11 @@ export const Form = () => {
                 />
 
                 <Button
+                    // className={hasSubmit && !isValid ? "invalid" : ""}
                     type="submit"
+                    disabled={hasSubmit && !isValid}
                 >
+
                     <CalculatorIcon />
                     Calculate Repayments
                 </Button>
