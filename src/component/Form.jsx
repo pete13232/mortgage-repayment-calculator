@@ -1,7 +1,6 @@
 import { Button } from './Button'
 import { Input } from './Input'
 import { RadioForm } from './RadioForm'
-import { RadioInput } from './RadioInput'
 import { Result } from './Result'
 import { CalculatorIcon } from './CalculatorIcon'
 
@@ -66,7 +65,7 @@ export const Form = () => {
     const handleTypo = (value, setFunction) => {
         const trimmed = value.trim()
         const regex = /[^0-9,.]+/g
-        const isTypo = regex.test(trimmed) // true or false
+        const isTypo = regex.test(trimmed)
         setFunction(prev => ({
             ...prev,
             value: trimmed,
@@ -225,7 +224,6 @@ export const Form = () => {
                 />
 
                 <Button
-                    // className={hasSubmit && !isValid ? "invalid" : ""}
                     type="submit"
                     disabled={hasSubmit && !isValid}
                 >

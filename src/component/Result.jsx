@@ -1,16 +1,5 @@
-import { EmptyIcon } from "./EmptyIcon"
-
 export const Result = ({ monthlyPayment, totalPayment }) => {
     return (
-        // <div className="result-container">
-        //     <EmptyIcon />
-        //     <div className="result-header">
-        //         <h2>Results shown here</h2>
-        //         <p className="result-description"> Complete the form and click “calculate repayments” to see what
-        //             your monthly repayments would be.</p>
-        //     </div>
-        // </div>
-
         <div className="result-container has-result">
             <div className="result-header has-result">
                 <h2>Your results</h2>

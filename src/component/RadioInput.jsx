@@ -1,4 +1,4 @@
-export const RadioInput = ({ id, value, label, name, type, checked, handleRadioSelect }) => {
+export const RadioInput = ({ id, type, value, name, label, checked, handleRadioSelect }) => {
     return <>
         <label className="radio form-group">
             <input

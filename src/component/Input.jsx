@@ -1,7 +1,7 @@
 export const Input = ({ id,
     label,
-    type,
     input,
+    type,
     placeholder,
     symbol,
     position,
@@ -38,7 +38,6 @@ export const Input = ({ id,
                     ? 'empty'
                     : null
                 }`}>
-                {/* {isEmpty && "This field is required" || isError && "Typo input"} */}
                 {isError
                     ? "Typo input"
                     : isEmpty
