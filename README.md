@@ -28,6 +28,7 @@ Users should be able to:
 - Input mortgage information and see monthly repayment and total repayment amounts after submitting the form
 - See form validation messages if any field is incomplete or typo
 - Complete the form only using their keyboard
+- Reset form by "Clear All" button
 - View the optimal layout for the interface depending on their device's screen size
 - See hover and focus states for all interactive elements on the page
 
@@ -61,8 +62,8 @@ You can explore the full experience on the DEMO below.
 
 ### Links
 
-- Demo URL: [Link]()
-- Solution URL: [Link]()
+- Demo URL: [Link](https://pete-mortgage-payment-calculator.netlify.app/)
+- Solution URL: [Link](https://www.frontendmentor.io/solutions/form-validation---mortgage-repayment-calculator-using-react-qyj_5_5nFK)
 
 ---
 
