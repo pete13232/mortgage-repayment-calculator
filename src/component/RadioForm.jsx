@@ -4,7 +4,7 @@ export const RadioForm = ({ type, handleRadioSelect }) => {
     const { value, isEmpty } = type
 
     return (
-        <fieldset fieldset className='radio-fieldset' >
+        <fieldset className='radio-fieldset' >
             <legend>Mortgage Type</legend>
             <div className='radio-wrapper'>
                 <RadioInput

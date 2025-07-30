@@ -5,7 +5,7 @@ import { RadioInput } from './RadioInput'
 import { Result } from './Result'
 import { CalculatorIcon } from './CalculatorIcon'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export const Form = () => {
 
@@ -29,27 +29,15 @@ export const Form = () => {
         isEmpty: false,
     })
 
+
+    const [hasTypo, setHasTypo] = useState(false)
+    const [isValid, setIsValid] = useState(false)
+
     const [hasSubmit, setHasSubmit] = useState(false)
 
     const [monthlyPayment, setMonthlyPayment] = useState(0)
     const [totalPayment, setTotalPayment] = useState(0)
 
-
-    const handleTypo = (value, setFunction) => {
-        const trimmed = value.trim()
-        const regex = /[^0-9,.]+/g
-        const isTypo = regex.test(trimmed) // true or false
-        console.log(isTypo)
-        setFunction(prev => ({
-            ...prev,
-            value: trimmed,
-            isError: isTypo,
-        }))
-
-        if (hasSubmit) {
-            handleEmpty()
-        }
-    }
 
     const handleRadioSelect = (value) => {
         setType(prev => ({
@@ -60,10 +48,12 @@ export const Form = () => {
     }
 
     const setEmpty = (setFuntion) => {
-        setFuntion(prev => ({
-            ...prev,
-            isEmpty: !prev.value
-        }))
+        setFuntion(prev => {
+            return ({
+                ...prev,
+                isEmpty: !prev.value
+            })
+        })
     }
 
     const handleEmpty = () => {
@@ -73,7 +63,24 @@ export const Form = () => {
         setEmpty(setType)
     }
 
-    const convertToNumber = (input, setFunction) => {
+    const handleTypo = (value, setFunction) => {
+        const trimmed = value.trim()
+        const regex = /[^0-9,.]+/g
+        const isTypo = regex.test(trimmed) // true or false
+        setFunction(prev => ({
+            ...prev,
+            value: trimmed,
+            isError: isTypo,
+        }))
+
+        setHasTypo(isTypo)
+
+        if (hasSubmit) {
+            handleEmpty()
+        }
+    }
+
+    const convertToNumber = (input) => {
         const { value, isEmpty } = input
 
         if (isEmpty || value === null) return null
@@ -110,30 +117,59 @@ export const Form = () => {
         setTotalPayment(0)
     }
 
+    const onValidate = () => {
+        const hasEmpty =
+            !amount.value ||
+            !term.value ||
+            !interest.value ||
+            !type.value
+
+        handleEmpty()
+        const isValid = !hasEmpty && !hasTypo
+        setIsValid(isValid)
+
+        return isValid
+    }
+
+    useEffect(() => {
+        const hasEmpty =
+            !amount.value ||
+            !term.value ||
+            !interest.value ||
+            !type.value
+
+        const isValid = !hasEmpty && !hasTypo
+        setIsValid(isValid)
+    }, [amount, interest, type, term, hasTypo])
+
+
     const onCalculate = (e) => {
         e.preventDefault()
-        handleEmpty()
+        const isValid = onValidate()
 
-        const amountNum = convertToNumber(amount, setAmount)
-        const termNum = convertToNumber(term, setTerm)
-        const interestNum = convertToNumber(interest, setInterest)
+        if (isValid) {
+            const amountNum = convertToNumber(amount, setAmount)
+            const termNum = convertToNumber(term, setTerm)
+            const interestNum = convertToNumber(interest, setInterest)
 
-        const P = amountNum
-        const n = termNum * 12
-        const r = interestNum / 12 / 100
-        let monthly, total
+            const P = amountNum
+            const n = termNum * 12
+            const r = interestNum / 12 / 100
+            let monthly, total
 
-        console.log(type)
-        if (type.value === "Repayment") {
-            monthly = (P * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1)
-            total = monthly * n
+            if (type.value === "Repayment") {
+                monthly = (P * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1)
+                total = monthly * n
+            }
+            if (type.value === "Interest Only") {
+                monthly = P * r;
+                total = monthly * n + P;
+            }
+            setMonthlyPayment(Number(monthly))
+            setTotalPayment(Number(total))
+        } else {
+            return
         }
-        if (type.value === "Interest Only") {
-            monthly = P * r;
-            total = monthly * n + P;
-        }
-        setMonthlyPayment(Number(monthly))
-        setTotalPayment(Number(total))
 
     }
 
